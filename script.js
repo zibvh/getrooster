@@ -52,13 +52,19 @@
                 );
 
                 if (apkAsset) {
-                    downloadBtn.href = apkAsset.browser_download_url;
+                    // Convert to direct download URL that doesn't require GitHub login
+                    const githubUrl = apkAsset.browser_download_url;
+                    const directUrl = githubUrl.replace('github.com', 'objects.githubusercontent.com');
+                    
+                    downloadBtn.href = directUrl;
+                    downloadBtn.target = "_blank";
+                    
                     const sizeMB = (apkAsset.size / 1048576).toFixed(1);
                     const version = data.tag_name || data.name || "latest";
-                    fileInfoSpan.innerHTML = `<i class="fas fa-check-circle"></i> Ready: ${apkAsset.name} (${sizeMB} MB) • ${version}`;
+                    fileInfoSpan.innerHTML = `<i class="fas fa-check-circle"></i> Ready: ${apkAsset.name} (${sizeMB} MB) • No account needed`;
                 } else {
                     fileInfoSpan.innerHTML =
-                        '<i class="fas fa-external-link-alt"></i> Get APK from GitHub releases';
+                        '<i class="fas fa-external-link-alt"></i> Get APK from GitHub releases (no account needed)';
                     downloadBtn.href = fallbackUrl;
                     downloadBtn.target = "_blank";
                 }
@@ -67,7 +73,7 @@
                 clearTimeout(timeoutId);
                 console.log("GitHub API fallback:", error);
                 fileInfoSpan.innerHTML =
-                    '<i class="fab fa-github"></i> Available on GitHub releases';
+                    '<i class="fab fa-github"></i> Available on GitHub releases (no account needed)';
                 downloadBtn.href = fallbackUrl;
                 downloadBtn.target = "_blank";
             });
@@ -82,7 +88,7 @@
     const criticalImages = document.querySelectorAll('img[loading="eager"]');
     criticalImages.forEach(img => {
         if (img.complete === false) {
-            
+            // placeholder for images if needed
         }
     });
 })();
