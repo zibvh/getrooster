@@ -28,67 +28,29 @@
     const downloadBtn = document.getElementById("downloadLink");
     const fileInfoSpan = document.getElementById("fileInfo");
 
-    let fallbackUrl = "https://github.com/zibvh/roost/releases/latest";
-
-    const fetchLatestApk = () => {
-        // Add timeout to avoid long waits
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-        fetch("https://api.github.com/repos/zibvh/roost/releases/latest", {
-            signal: controller.signal,
-            headers: { Accept: "application/json" }
-        })
-            .then(response => {
-                clearTimeout(timeoutId);
-                if (!response.ok) throw new Error("API error");
-                return response.json();
-            })
-            .then(data => {
-                const apkAsset = data.assets.find(
-                    asset =>
-                        asset.name.toLowerCase().startsWith("rooster-v") &&
-                        asset.name.toLowerCase().endsWith(".apk")
-                );
-
-                if (apkAsset) {
-                    // Convert to direct download URL that doesn't require GitHub login
-                    const githubUrl = apkAsset.browser_download_url;
-                    const directUrl = githubUrl.replace('github.com', 'objects.githubusercontent.com');
-                    
-                    downloadBtn.href = directUrl;
-                    downloadBtn.target = "_blank";
-                    
-                    const sizeMB = (apkAsset.size / 1048576).toFixed(1);
-                    const version = data.tag_name || data.name || "latest";
-                    fileInfoSpan.innerHTML = `<i class="fas fa-check-circle"></i> Ready: ${apkAsset.name} (${sizeMB} MB) • No account needed`;
+    // Update this URL whenever you upload a new version
+    const APK_DOWNLOAD_URL = 'https://getrooster.onrender.com/downloads/rooster-v2.0.1.apk';
+    
+    // Set the download link
+    downloadBtn.href = APK_DOWNLOAD_URL;
+    downloadBtn.target = "_blank";
+    
+    // Optional: Get file size and show it (if your server supports HEAD requests)
+    fetch(APK_DOWNLOAD_URL, { method: 'HEAD' })
+        .then(response => {
+            if (response.ok) {
+                const sizeBytes = response.headers.get('content-length');
+                if (sizeBytes) {
+                    const sizeMB = (sizeBytes / 1048576).toFixed(1);
+                    fileInfoSpan.innerHTML = `<i class="fas fa-check-circle"></i> Ready to download • ${sizeMB} MB • No account needed`;
                 } else {
-                    fileInfoSpan.innerHTML =
-                        '<i class="fas fa-external-link-alt"></i> Get APK from GitHub releases (no account needed)';
-                    downloadBtn.href = fallbackUrl;
-                    downloadBtn.target = "_blank";
+                    fileInfoSpan.innerHTML = `<i class="fas fa-check-circle"></i> Ready to download • No account needed`;
                 }
-            })
-            .catch(error => {
-                clearTimeout(timeoutId);
-                console.log("GitHub API fallback:", error);
-                fileInfoSpan.innerHTML =
-                    '<i class="fab fa-github"></i> Available on GitHub releases (no account needed)';
-                downloadBtn.href = fallbackUrl;
-                downloadBtn.target = "_blank";
-            });
-    };
-
-    if ("requestIdleCallback" in window) {
-        requestIdleCallback(() => fetchLatestApk(), { timeout: 2000 });
-    } else {
-        setTimeout(fetchLatestApk, 100);
-    }
-
-    const criticalImages = document.querySelectorAll('img[loading="eager"]');
-    criticalImages.forEach(img => {
-        if (img.complete === false) {
-            // placeholder for images if needed
-        }
-    });
+            } else {
+                fileInfoSpan.innerHTML = `<i class="fas fa-exclamation-triangle"></i> APK ready for download`;
+            }
+        })
+        .catch(() => {
+            fileInfoSpan.innerHTML = `<i class="fas fa-download"></i> Click to download APK`;
+        });
 })();
