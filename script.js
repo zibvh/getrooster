@@ -29,7 +29,7 @@
     const fileInfoSpan = document.getElementById("fileInfo");
 
     // Update this URL whenever you upload a new version
-    const APK_DOWNLOAD_URL = 'https://getrooster.onrender.com/downloads/rooster-v2.2.1.apk';
+    const APK_DOWNLOAD_URL = 'https://getrooster.onrender.com/downloads/rooster-v2.2.2.apk';
     
     // Set the download link
     downloadBtn.href = APK_DOWNLOAD_URL;
