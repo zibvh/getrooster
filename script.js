@@ -29,7 +29,7 @@
     const fileInfoSpan = document.getElementById("fileInfo");
 
     // Update this URL whenever you upload a new version
-    const APK_DOWNLOAD_URL = 'https://getrooster.onrender.com/downloads/rooster-v2.0.1.apk';
+    const APK_DOWNLOAD_URL = 'https://getrooster.onrender.com/downloads/rooster-v2.1.0.apk';
     
     // Set the download link
     downloadBtn.href = APK_DOWNLOAD_URL;
@@ -42,9 +42,9 @@
                 const sizeBytes = response.headers.get('content-length');
                 if (sizeBytes) {
                     const sizeMB = (sizeBytes / 1048576).toFixed(1);
-                    fileInfoSpan.innerHTML = `<i class="fas fa-check-circle"></i> Ready to download • ${sizeMB} MB • No account needed`;
+                    fileInfoSpan.innerHTML = `<i class="fas fa-check-circle"></i> Ready to download • ${sizeMB} MB `;
                 } else {
-                    fileInfoSpan.innerHTML = `<i class="fas fa-check-circle"></i> Ready to download • No account needed`;
+                    fileInfoSpan.innerHTML = `<i class="fas fa-check-circle"></i> Ready to download`;
                 }
             } else {
                 fileInfoSpan.innerHTML = `<i class="fas fa-exclamation-triangle"></i> APK ready for download`;
