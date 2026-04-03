@@ -1,2 +1,2 @@
-/downloads/*
-	Access-Control-Allow-Origin: *
+/downloads/version.json
+  Access-Control-Allow-Origin: *
